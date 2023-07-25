@@ -1,6 +1,6 @@
 // get the client
 const mysql = require('mysql2/promise');
-
+console.log(process.env.MYSQL_DATABASE)
 const db = mysql.createConnection({
       host: process.env.MYSQL_HOST,
       port: process.env.MYSQL_PORT,

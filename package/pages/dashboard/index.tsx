@@ -1,317 +1,318 @@
-import Link  from 'next/link';
-import { ReactElement, useEffect,Suspense, useState } from 'react';
-import BlankLayout from '../../src/layouts/blank/BlankLayout';
+import Link from "next/link";
+import { ReactElement, useEffect, Suspense, useState } from "react";
+import BlankLayout from "../../src/layouts/blank/BlankLayout";
 
 // components
-import PageContainer from '../../src/components/container/PageContainer';
-import Logo from '../../src/layouts/full/shared/logo/Logo';
-import { useRouter } from 'next/router';
+import PageContainer from "../../src/components/container/PageContainer";
+import Logo from "../../src/layouts/full/shared/logo/Logo";
+import { useRouter } from "next/router";
 import CustomTextField from "../../src/components/forms/theme-elements/CustomTextField";
-import { Flip, ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import DashboardCard from '../../src/components/shared/DashboardCard';
-import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
+import { Flip, ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import DashboardCard from "../../src/components/shared/DashboardCard";
+import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 
 //new imports
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
-import dynamic from 'next/dynamic';
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Menu from "@mui/material/Menu";
+import MenuIcon from "@mui/icons-material/Menu";
+import Container from "@mui/material/Container";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import Tooltip from "@mui/material/Tooltip";
+import MenuItem from "@mui/material/MenuItem";
+import AdbIcon from "@mui/icons-material/Adb";
+import dynamic from "next/dynamic";
 
-const pages = ['Aviral', 'Scott', 'About'];
-const settings = ['Profile',  'Logout'];
+const pages = ["Aviral", "Scott", "About"];
+const settings = ["Profile", "Logout"];
 
 //dynamic component
-const DynamicHeader = dynamic(() => import('../../src/components/dashboard/SalesOverview'));
-const DynamicHeader2 = dynamic(() => import('../../src/components/dashboard/YearlyBreakup'));
+const DynamicHeader = dynamic(
+  () => import("../../src/components/dashboard/SalesOverview")
+);
+const DynamicHeader2 = dynamic(
+  () => import("../../src/components/dashboard/YearlyBreakup")
+);
 
 const Dashboard = () => {
   const router = useRouter();
-  const [items, setItems] = useState({});
+  const [items, setItems] = useState({
+    userid: "",
+    firstname: "",
+    lastname: "",
+  });
 
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    console.log("handleOpenNavMenu "+event.currentTarget)
+    console.log("handleOpenNavMenu " + event.currentTarget);
     setAnchorElNav(event.currentTarget);
   };
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    console.log("handleOpenUserMenu "+event.currentTarget)
-    console.log(event.currentTarget.tagName)
+    console.log("handleOpenUserMenu " + event.currentTarget);
+    console.log(event.currentTarget.tagName);
     setAnchorElUser(event.currentTarget);
   };
 
   const handleCloseNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    console.log("handleCloseNavMenu "+event.currentTarget.title)
+    console.log("handleCloseNavMenu " + event.currentTarget.title);
     if (event.currentTarget.title === pages[0]) {
-        setDynComp(<div>{loadDynamicComponent()}</div>)
-    }else if (event.currentTarget.title === pages[1]) {
-        setDynComp(<div>{loadDynamicComponent2()}</div>)
+      setDynComp(<div>{loadDynamicComponent()}</div>);
+    } else if (event.currentTarget.title === pages[1]) {
+      setDynComp(<div>{loadDynamicComponent2()}</div>);
     }
     setAnchorElNav(null);
   };
 
   const handleCloseUserMenu = () => {
-    console.log("handleCloseUserMenu ")
+    console.log("handleCloseUserMenu ");
     setAnchorElUser(null);
   };
 
+  const loginUser = async () => {
+    let txt = localStorage.getItem("user");
+    const user = JSON.parse("" + txt);
+    console.log("userLocal: " + txt);
 
-  const loginUser =async () => {
-  let txt = localStorage.getItem('user');
-  const user = JSON.parse(""+txt);
-  console.log("userLocal: "+txt);
+    let txttoken = localStorage.getItem("token");
+    const token = JSON.parse("" + txttoken);
+    console.log("TOKEN: " + token);
 
-  let txttoken = localStorage.getItem('token');
-  const token = JSON.parse(""+txttoken);
-  console.log("TOKEN: "+token);
+    if (user == null) {
+      router.push("authentication/login");
+    } else {
+      //user found in session
+      setItems(user);
+      console.log("name: " + user.firstname + " " + user.lastname);
+      const userID = user.userid;
+      if (userID.length != 0 && token.length != 0) {
+      } else {
+        const apiUrlEndPoint = "/api/dashboard";
+        const response = await fetch(apiUrlEndPoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userID,
+            token,
+          }),
+        });
 
-    if (user==null) {
-        router.push('authentication/login')
-    }else{
-        //user found in session
-        setItems(user)
-        console.log("name: "+user.fristname+" "+user.lastname);
-        const userID = user.userid;
-        if (userID.length!=0&&token.length!=0) {
-            
-        }else{
-            const apiUrlEndPoint = '/api/dashboard';
-            const response = await fetch(apiUrlEndPoint,{
-              method: 'POST',
-              headers: {
-                "Content-Type":"application/json"
-              },
-              body: JSON.stringify({
-                userID,token
-              })
-            })
-            
-            if(response.ok) {
-              const res = await response.json();
-              console.log(res.user);
-              console.log(res.token);
-            }else{
-              toast.error('Response Error..');
-            }
-          }
-
+        if (response.ok) {
+          const res = await response.json();
+          console.log(res.user);
+          console.log(res.token);
+        } else {
+          toast.error("Response Error..");
+        }
+      }
     }
-    
-
-   
-  }
-
+  };
 
   function stringToColor(string: string) {
     let hash = 0;
     let i;
-  
+
     /* eslint-disable no-bitwise */
     for (i = 0; i < string.length; i += 1) {
       hash = string.charCodeAt(i) + ((hash << 5) - hash);
     }
-  
-    let color = '#';
-  
+
+    let color = "#";
+
     for (i = 0; i < 3; i += 1) {
       const value = (hash >> (i * 8)) & 0xff;
       color += `00${value.toString(16)}`.slice(-2);
     }
     /* eslint-enable no-bitwise */
-  
+
     return color;
   }
 
-function stringAvatar(name: string) {
+  function stringAvatar(name: string) {
     return {
       sx: {
         bgcolor: stringToColor(name),
       },
-      children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
+      children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
     };
   }
 
-//   const DynamicHeader = dynamic(() => import('../../src/components/dashboard/SalesOverview'), {
-//     loading: () => <p>Loading...</p>,
-//   });
+  //   const DynamicHeader = dynamic(() => import('../../src/components/dashboard/SalesOverview'), {
+  //     loading: () => <p>Loading...</p>,
+  //   });
 
+  const [dynComp, setDynComp] = useState(<div />);
 
-const [dynComp, setDynComp] = useState(<div/>);
-
-   const loadDynamicComponent = () => {
-
-      return (
-         <Suspense fallback={<div>Loading...</div>}>
-            <DynamicHeader/>
-         </Suspense>
-      )
-   }
-
-   const loadDynamicComponent2 = () => {
-
+  const loadDynamicComponent = () => {
     return (
-       <Suspense fallback={<div>Loading...</div>}>
-          <DynamicHeader2/>
-       </Suspense>
-    )
- }
+      <Suspense fallback={<div>Loading...</div>}>
+        <DynamicHeader />
+      </Suspense>
+    );
+  };
 
-  useEffect(() =>{
-    console.log("DASHBOARD ")
-    loginUser()
-     
-  },[])
+  const loadDynamicComponent2 = () => {
+    return (
+      <Suspense fallback={<div>Loading...</div>}>
+        <DynamicHeader2 />
+      </Suspense>
+    );
+  };
+
+  useEffect(() => {
+    console.log("DASHBOARD ");
+    loginUser();
+  }, []);
 
   return (
     <PageContainer title="Dashboard" description="this is the dashboard">
-       <AppBar position="static">
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
+      <AppBar position="static">
+        <Container maxWidth="xl">
+          <Toolbar disableGutters>
             {/* for small devices */}
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            Chec
-          </Typography>
-
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
+            <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+            <Typography
+              variant="h6"
+              noWrap
+              component="a"
+              href="/"
               sx={{
-                display: { xs: 'block', md: 'none' },
+                mr: 2,
+                display: { xs: "none", md: "flex" },
+                fontFamily: "monospace",
+                fontWeight: 700,
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} title={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-          {/* for large devices */}
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href=""
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            Chec
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                title={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+              Chec
+            </Typography>
+
+            <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleOpenNavMenu}
+                color="inherit"
               >
-                {page}
-              </Button>
-            ))}
-          </Box>
-
-           {/* Profile sectiona and logout */}
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                {/* <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" /> */}
-                <Avatar {...stringAvatar(''+items.fristname+" "+items.lastname)} />
+                <MenuIcon />
               </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorElNav}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "left",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "left",
+                }}
+                open={Boolean(anchorElNav)}
+                onClose={handleCloseNavMenu}
+                sx={{
+                  display: { xs: "block", md: "none" },
+                }}
+              >
+                {pages.map((page) => (
+                  <MenuItem
+                    key={page}
+                    title={page}
+                    onClick={handleCloseNavMenu}
+                  >
+                    <Typography textAlign="center">{page}</Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+            {/* for large devices */}
+            <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+            <Typography
+              variant="h5"
+              noWrap
+              component="a"
+              href=""
+              sx={{
+                mr: 2,
+                display: { xs: "flex", md: "none" },
+                flexGrow: 1,
+                fontFamily: "monospace",
+                fontWeight: 700,
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
               }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
+              Chec
+            </Typography>
+            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+              {pages.map((page) => (
+                <Button
+                  key={page}
+                  title={page}
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: "white", display: "block" }}
+                >
+                  {page}
+                </Button>
               ))}
-            </Menu>
-          </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
+            </Box>
 
+            {/* Profile sectiona and logout */}
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  {/* <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" /> */}
+                  <Avatar
+                    {...stringAvatar(
+                      "" + items.firstname + " " + items.lastname
+                    )}
+                  />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: "45px" }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {settings.map((setting) => (
+                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                    <Typography textAlign="center">{setting}</Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+          </Toolbar>
+        </Container>
+      </AppBar>
 
-    { dynComp }
-
-
+      {dynComp}
     </PageContainer>
   );
 };
-
-
 
 export default Dashboard;
 
@@ -334,7 +335,7 @@ Dashboard.getLayout = function getLayout(page: ReactElement) {
 //         }}
 //       >
 //         <Item>
-//         <div>Name: {items.fristname} {items.lastname}</div>
+//         <div>Name: {items.firstname} {items.lastname}</div>
 // <div>UserName: {items.username}</div>
 // <div>Email: {items.email}</div>
 //         </Item>
@@ -344,7 +345,7 @@ Dashboard.getLayout = function getLayout(page: ReactElement) {
 // ))}
 // </Grid>
 // </DashboardCard>
-// <Box  
+// <Box
 // sx={{
 // position: 'relative',
 // '&:before': {
