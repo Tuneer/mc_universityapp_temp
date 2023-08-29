@@ -56,6 +56,19 @@ const columns: GridColDef[] = [
       );
     },
   },
+  {
+    field: "Edit",
+    headerName: "Edit",
+    width: 140,
+    renderCell: (params) => {
+      return (
+        <Button onClick={() => onButtonClick(params.row)} variant="contained">
+          <DeleteIcon />
+          Edit
+        </Button>
+      );
+    },
+  },
 ];
 
 const onButtonClick = (row: { Sno: string }) => {
@@ -204,12 +217,7 @@ const Cities = () => {
       <Box
         sx={{
           width: 1300,
-          height: 400,
-          backgroundColor: "primary.light",
-          "&:hover": {
-            backgroundColor: "primary.light",
-            opacity: [0.9, 0.8, 0.7],
-          },
+          height: 200,
         }}
       >
         <FormControl sx={{ m: 1, minWidth: 120 }}>

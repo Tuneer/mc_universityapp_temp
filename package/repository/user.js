@@ -6,7 +6,7 @@ export default async function apiRequest(req,res){
         console.log("BODY: "+JSON.stringify(req.body))
         //const query = 'SELECT * FROM `user`';
       //  const selectQuery = 'SELECT `username`,`email`,`userrole`,`userid` FROM `user`';
-        const queryWithParams = 'SELECT `username`,`email`,`userrole`,`userid`,`fristname`,`lastname` FROM `user` WHERE  username="'+req.body.userName+'" && password="'+req.body.userPassword+'" && userrole="'+req.body.userRole+'" ';
+        const queryWithParams = 'SELECT `username`,`email`,`userrole`,`userid`,`firstname`,`lastname` FROM `user` WHERE  username="'+req.body.userName+'" && password="'+req.body.userPassword+'" && userrole="'+req.body.userRole+'" ';
        // const values = [username=req.body.userName,userrole=req.body.userRole,password=req.body.userPassword];
         console.log(queryWithParams);
         const values = [];

@@ -9,7 +9,7 @@ export default async function addCountry(req,res){
         console.log(result[0][0].maxSno);
         const newID = result[0][0].maxSno+1;
         console.log(newID);
-        const insertQuery = ' INSERT INTO `country`(`Country`,`CountryID`) VALUES ("'+req.body.countryName+'","Cntry_'+newID+'")';
+        const insertQuery = 'INSERT INTO `country`(`Sno`,`Country`,`CountryID`) VALUES ("'+newID+'","'+req.body.countryName+'","Cntry_'+newID+'")';
         console.log(insertQuery);
         const insertQueryResult = await (await db).query(insertQuery);
         console.log(insertQueryResult);

@@ -35,6 +35,8 @@ import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
+import SendIcon from "@mui/icons-material/Save";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const columns: GridColDef[] = [
   { field: "sno", headerName: "Sno", width: 30 },
@@ -105,6 +107,32 @@ const columns: GridColDef[] = [
     headerName: "Non-census family households",
     width: 130,
   },
+  {
+    field: "Delete",
+    headerName: "Delete",
+    width: 140,
+    renderCell: (params) => {
+      return (
+        <Button onClick={() => onButtonClick(params.row)} variant="contained">
+          <DeleteIcon />
+          Delete
+        </Button>
+      );
+    },
+  },
+  {
+    field: "Edit",
+    headerName: "Edit",
+    width: 140,
+    renderCell: (params) => {
+      return (
+        <Button onClick={() => onButtonClick(params.row)} variant="contained">
+          <DeleteIcon />
+          Edit
+        </Button>
+      );
+    },
+  },
   // {
   //   field: "age",
   //   headerName: "Age",
@@ -121,6 +149,11 @@ const columns: GridColDef[] = [
   //     `${params.row.firstName || ""} ${params.row.lastName || ""}`,
   // },
 ];
+
+const onButtonClick = (row: { Sno: string }) => {
+  //do whatever you want with the row
+  console.log(row.Sno);
+};
 
 const IncomeTaxBeforeAfter = () => {
   const router = useRouter();
@@ -141,68 +174,16 @@ const IncomeTaxBeforeAfter = () => {
   //current income data
   const [rows, setRows] = useState<any[]>([]);
 
+  //to add income
+  const [data, setData] = useState<any[]>([]);
+
   const [error, setError] = useState({});
 
   const setErrorForField = (errorStr: string, fieldName: string) => {
     setError({ ...error, [fieldName]: errorStr });
   };
 
-  const onChangeValue = (txtValue: string, setter: Function) => {
-    setter(txtValue);
-  };
-
-  const loginUser = async () => {
-    console.log("DATA: " + userName);
-    if (userName.length === 0) {
-      toast.error("Please enter username.");
-    } else if (userPassword.length === 0) {
-      toast.error("Please enter userpassword.");
-    } else if (userRole.length === 0) {
-      toast.error("Please enter userrole.");
-    } else {
-      const apiUrlEndPoint = "/api/user/login";
-      const response = await fetch(apiUrlEndPoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userRole,
-          userName,
-          userPassword,
-        }),
-      });
-
-      if (response.ok) {
-        const res = await response.json();
-        const user = res.user;
-        const token = res.token;
-        console.log(user);
-        console.log(token);
-        //add data in session
-        localStorage.setItem("user", JSON.stringify(user));
-        localStorage.setItem("token", JSON.stringify(token));
-
-        //get data from session
-        const localUser = JSON.parse(
-          JSON.stringify(localStorage.getItem("user"))
-        );
-        console.log("localUser: " + localUser);
-        const localToken = JSON.parse(
-          JSON.stringify(localStorage.getItem("token"))
-        );
-        console.log("localToken: " + localToken);
-        if (user.userrole === "admin") {
-          router.push("admin");
-        } else {
-          router.push("dashboard");
-        }
-      } else {
-        const res = await response.json();
-        toast.error(res.message);
-      }
-    }
-  };
+  const addIncomeData = (data: any) => {};
 
   useEffect(() => {
     console.log("JIOU");
@@ -326,17 +307,30 @@ const IncomeTaxBeforeAfter = () => {
     getCities(event.target.value);
   };
 
+  // onchange text value of textfields
+  const onChangeValue = (event: any) => {
+    const value = event.target.value;
+    console.log("Value: " + value);
+    setData([{ [event.target.name]: value }]);
+  };
+
+  //handle save to save data in db.
+  const handleClickSave = async () => {
+    console.log("EVENT: ");
+    console.log("DATA: " + data);
+    if (data.length === 0) {
+      toast.error("Please enter details.");
+    } else {
+      addIncomeData(data);
+    }
+  };
+
   return (
     <PageContainer title="Login" description="this is Login page">
       <Box
         sx={{
           width: 1300,
           height: 400,
-          backgroundColor: "primary.light",
-          "&:hover": {
-            backgroundColor: "primary.light",
-            opacity: [0.9, 0.8, 0.7],
-          },
         }}
       >
         <FormControl sx={{ m: 1, minWidth: 120 }}>
@@ -421,6 +415,7 @@ const IncomeTaxBeforeAfter = () => {
             label="Total Household type including census family structure"
             type="number"
             variant="outlined"
+            onChange={onChangeValue}
           />
 
           <CustomTextField
@@ -428,6 +423,7 @@ const IncomeTaxBeforeAfter = () => {
             label="Census-family households"
             type="number"
             variant="outlined"
+            onChange={onChangeValue}
           />
 
           <CustomTextField
@@ -435,6 +431,7 @@ const IncomeTaxBeforeAfter = () => {
             label="Only one census family without additional persons"
             type="number"
             variant="outlined"
+            onChange={onChangeValue}
           />
 
           <CustomTextField
@@ -493,6 +490,17 @@ const IncomeTaxBeforeAfter = () => {
             variant="outlined"
           />
         </Box>
+
+        <Button
+          size="small"
+          variant="contained"
+          endIcon={<SendIcon />}
+          onClick={() => {
+            handleClickSave();
+          }}
+        >
+          Save
+        </Button>
       </Box>
 
       <DataGrid

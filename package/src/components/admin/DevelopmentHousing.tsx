@@ -15,25 +15,23 @@ import {
 
 // components
 import PageContainer from "../../../src/components/container/PageContainer";
+import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import { useRouter } from "next/router";
 import CustomTextField from "../../../src/components/forms/theme-elements/CustomTextField";
 import { Flip, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SendIcon from "@mui/icons-material/Save";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { isNullOrUndefined } from "util";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormHelperText from "@mui/material/FormHelperText";
-import FormControl from "@mui/material/FormControl";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 
 const columns: GridColDef[] = [
   { field: "Sno", headerName: "Sno", width: 30 },
-  { field: "Country", headerName: "Country", width: 130 },
-  { field: "Province", headerName: "Province", width: 250 },
-  { field: "ProvinceID", headerName: "ProvinceID", width: 130 },
+  { field: "Housing estimate", headerName: "Country", width: 130 },
+  { field: "Type of house", headerName: "Type of house", width: 130 },
+  { field: "Year", headerName: "Year", width: 130 },
+  { field: "Q1", headerName: "Q1", width: 130 },
+  { field: "Q2", headerName: "Q2", width: 130 },
+  { field: "Q3", headerName: "Q3", width: 130 },
+  { field: "Q4", headerName: "Q4", width: 130 },
   {
     field: "Delete",
     headerName: "Delete",
@@ -67,23 +65,20 @@ const onButtonClick = (row: { Sno: string }) => {
   console.log(row.Sno);
 };
 
-const Province = () => {
+const DevelopmentHousing = () => {
   const router = useRouter();
   const [rows, setRows] = useState<any[]>([]);
   const [error, setError] = useState({});
-  const [country, setCountry] = useState<string>("");
-  const [province, setProvince] = useState<string>("");
-  const [countries, setCountries] = useState<any[]>([]);
+  const [userName, setUserName] = useState<string>("");
 
   useEffect(() => {
-    console.log("Country");
-    //get the list of country etc.
-    getCountry();
-    getProvince();
+    console.log("Development Housing");
+    //get the list of Housing etc.
+    getHousing();
   }, []);
 
-  const getCountry = async () => {
-    const apiUrlEndPoint = "/api/admin/APICallCountry";
+  const getHousing = async () => {
+    const apiUrlEndPoint = "/api/admin/APICallHousing";
     const response = await fetch(apiUrlEndPoint, {
       method: "GET",
       headers: {
@@ -95,28 +90,7 @@ const Province = () => {
       const res = await response.json();
       console.log(res);
       res.forEach((element: any) => {
-        console.log("ITBAC : " + element.Country);
-      });
-      setCountries(res);
-    } else {
-      toast.error("Response Error..");
-    }
-  };
-
-  const getProvince = async () => {
-    const apiUrlEndPoint = "/api/admin/GetProvince";
-    const response = await fetch(apiUrlEndPoint, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (response.ok) {
-      const res = await response.json();
-      console.log(res);
-      res.forEach((element: any) => {
-        console.log("ITBAC : " + element.Country);
+        console.log("ITBAC getHousing : " + element.Country);
       });
       setRows(res);
     } else {
@@ -133,16 +107,16 @@ const Province = () => {
 
   const handleClickSave = async () => {
     console.log("EVENT: ");
-    console.log("DATA: " + country + " " + province);
-    if (country.length === 0) {
+    console.log("DATA: " + userName);
+    if (userName.length === 0) {
       toast.error("Please enter country.");
     } else {
-      addProvince(country, province);
+      addHousing(userName);
     }
   };
 
-  const addProvince = async (countryName: string, provinceName: string) => {
-    const apiUrlEndPoint = "/api/admin/AddProvince";
+  const addHousing = async (countryName: string) => {
+    const apiUrlEndPoint = "/api/admin/AddCountry";
     const response = await fetch(apiUrlEndPoint, {
       method: "POST",
       headers: {
@@ -150,21 +124,14 @@ const Province = () => {
       },
       body: JSON.stringify({
         countryName,
-        provinceName,
       }),
     });
 
     if (response.ok) {
-      getProvince();
+      getHousing();
     } else {
       toast.error("Response Error..");
     }
-  };
-
-  const handleChangeC = (event: SelectChangeEvent) => {
-    console.log("EVENT: " + event);
-    console.log(event.target.value);
-    setCountry(event.target.value);
   };
 
   return (
@@ -172,32 +139,14 @@ const Province = () => {
       <Box
         sx={{
           width: 1300,
-          height: 200,
+          height: 400,
+          backgroundColor: "primary.light",
+          "&:hover": {
+            backgroundColor: "primary.light",
+            opacity: [0.9, 0.8, 0.7],
+          },
         }}
       >
-        <FormControl sx={{ m: 1, minWidth: 120 }}>
-          <InputLabel id="country">Country</InputLabel>
-          <Select
-            labelId="country"
-            id="country_helper"
-            value={country}
-            label="Country"
-            onChange={handleChangeC}
-          >
-            <MenuItem value="">
-              <em>Select</em>
-            </MenuItem>
-            {countries.map((row) => (
-              <MenuItem value={row.Country}>
-                <em>{row.Country}</em>
-              </MenuItem>
-            ))}
-          </Select>
-          <FormHelperText>
-            Country Name would come here to select
-          </FormHelperText>
-        </FormControl>
-
         <Box
           component="form"
           sx={{
@@ -207,12 +156,12 @@ const Province = () => {
           autoComplete="off"
         >
           <CustomTextField
-            id="province"
-            label="Province"
+            id="country"
+            label="Country"
             type="text"
             variant="outlined"
             onChange={(event: { target: { value: string } }) => {
-              onChangeValue(event.target.value, setProvince);
+              onChangeValue(event.target.value, setUserName);
             }}
           />
 
@@ -244,8 +193,8 @@ const Province = () => {
   );
 };
 
-export default Province;
+export default DevelopmentHousing;
 
-Province.getLayout = function getLayout(page: ReactElement) {
+DevelopmentHousing.getLayout = function getLayout(page: ReactElement) {
   return <BlankLayout>{page}</BlankLayout>;
 };
