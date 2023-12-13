@@ -650,6 +650,23 @@ const Dashboard = () => {
               />
             </ListItemButton>
           </ListItem>
+          <Divider variant="inset" component="li" />
+          <ListItem disablePadding>
+            <ListItemButton
+              selected={selectedIndex === 11}
+              onClick={(event) => handleListItemClick(event, 11)}
+            >
+              <ListItemIcon>
+                <DoubleArrowRoundedIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary="CSD to CMA Conversion"
+                onClick={() => {
+                  setDynComp(<div>{loadRent()}</div>);
+                }}
+              />
+            </ListItemButton>
+          </ListItem>
         </List>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 1 }}>

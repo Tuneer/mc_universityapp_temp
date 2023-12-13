@@ -161,6 +161,13 @@ const StructureTypeOfBuilding = () => {
   const [aiabthfoms, setAIABTHFOMS] = useState<string>("");
   const [oad, setOAD] = useState<string>("");
 
+  const worker = new Worker(
+    new URL("../../../repository/worker/apiWorker.ts", import.meta.url)
+  );
+  const workerCountry = new Worker(
+    new URL("../../../repository/worker/apiWorkerCountry.ts", import.meta.url)
+  );
+
   useEffect(() => {
     console.log("Structure Type Of Building");
     //get the list of MBM etc.
@@ -169,24 +176,41 @@ const StructureTypeOfBuilding = () => {
   }, []);
 
   const getStructureTypeOfBuilding = async () => {
-    const apiUrlEndPoint = "/api/admin/APICallSTOB";
-    const response = await fetch(apiUrlEndPoint, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    // Call the web worker function
+    worker.onmessage = (event) => {
+      // console.log("onmessage in worker:", event.data.data);
+      setRows(event.data.data);
+      worker.terminate(); // Terminate the worker after it's done
+    };
 
-    if (response.ok) {
-      const res = await response.json();
-      console.log(res);
-      res.forEach((element: any) => {
-        console.log("ITBAC STOB : " + element.Country);
-      });
-      setRows(res);
-    } else {
-      toast.error("Response Error..");
-    }
+    worker.onerror = (error) => {
+      console.error("Error in worker:", error);
+      worker.terminate(); // Terminate the worker in case of an error
+    };
+    const apiUrlEndPoint = "/api/admin/APICallSTOB";
+    const httpMethod = "GET"; // Specify the HTTP method (e.g., 'POST', 'PUT', etc.)
+    const requestBody = {
+      // Your request body data here
+      // For example:
+      // key1: "value1",
+      // key2: "value2",
+    };
+
+    const customHeaders = {
+      // Add custom headers as needed
+      //   Authorization: "Bearer YOUR_ACCESS_TOKEN",
+      "Content-Type": "application/json",
+    };
+
+    const data = {
+      url: apiUrlEndPoint,
+      method: httpMethod,
+      requestBody: requestBody,
+      headers: customHeaders,
+    };
+
+    worker.postMessage(JSON.stringify(data));
+    console.log("end initial Worker");
   };
 
   const handleClickSave = async () => {
@@ -233,24 +257,41 @@ const StructureTypeOfBuilding = () => {
 
   //get all the country
   const getCountry = async () => {
-    const apiUrlEndPoint = "/api/admin/APICallCountry";
-    const response = await fetch(apiUrlEndPoint, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    // Call the web worker function
+    workerCountry.onmessage = (event) => {
+      // console.log("onmessage in worker:", event.data.data);
+      setCountries(event.data.data);
+      workerCountry.terminate(); // Terminate the worker after it's done
+    };
 
-    if (response.ok) {
-      const res = await response.json();
-      console.log(res);
-      res.forEach((element: any) => {
-        console.log("ITBAC : " + element.Country);
-      });
-      setCountries(res);
-    } else {
-      toast.error("Response Error..");
-    }
+    workerCountry.onerror = (error) => {
+      console.error("Error in worker:", error);
+      workerCountry.terminate(); // Terminate the worker in case of an error
+    };
+    const apiUrlEndPoint = "/api/admin/APICallCountry";
+    const httpMethod = "GET"; // Specify the HTTP method (e.g., 'POST', 'PUT', etc.)
+    const requestBody = {
+      // Your request body data here
+      // For example:
+      // key1: "value1",
+      // key2: "value2",
+    };
+
+    const customHeaders = {
+      // Add custom headers as needed
+      //   Authorization: "Bearer YOUR_ACCESS_TOKEN",
+      "Content-Type": "application/json",
+    };
+
+    const data = {
+      url: apiUrlEndPoint,
+      method: httpMethod,
+      requestBody: requestBody,
+      headers: customHeaders,
+    };
+
+    workerCountry.postMessage(JSON.stringify(data));
+    console.log("end initial Worker");
   };
 
   //get the province when country is selected.

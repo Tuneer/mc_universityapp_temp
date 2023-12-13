@@ -1,11 +1,11 @@
 import db from "../config/db";
 
-export default async function getHousingTypes(req,res){
+export default async function getCitiesThroughProvince(req,res){
 
     try {
        // console.log("BODY: "+JSON.stringify(req.body))
       //  const query = 'SELECT * FROM `province`';
-        const selectQuery = 'SELECT * FROM typeof_house';
+        const selectQuery = 'SELECT DISTINCT `citiesName` FROM `cities` WHERE Province="'+req.body.province+'"';
        // const queryWithParams = 'SELECT `username`,`email`,`userrole`,`userid`,`fristname`,`lastname` FROM `user` WHERE  username="'+req.body.userName+'" && password="'+req.body.userPassword+'" && userrole="'+req.body.userRole+'" ';
        // const values = [username=req.body.userName,userrole=req.body.userRole,password=req.body.userPassword];
         console.log(selectQuery);

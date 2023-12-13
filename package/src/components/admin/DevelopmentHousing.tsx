@@ -71,32 +71,74 @@ const DevelopmentHousing = () => {
   const [error, setError] = useState({});
   const [userName, setUserName] = useState<string>("");
 
+  const worker = new Worker(
+    new URL("../../../repository/worker/apiWorker.ts", import.meta.url)
+  );
+
   useEffect(() => {
     console.log("Development Housing");
     //get the list of Housing etc.
-    getHousing();
+    fetchData();
   }, []);
 
-  const getHousing = async () => {
-    const apiUrlEndPoint = "/api/admin/APICallHousing";
-    const response = await fetch(apiUrlEndPoint, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+  const fetchData = () => {
+    // Call the web worker function
+    worker.onmessage = (event) => {
+      // console.log("onmessage in worker:", event.data.data);
+      setRows(event.data.data);
+      worker.terminate(); // Terminate the worker after it's done
+    };
 
-    if (response.ok) {
-      const res = await response.json();
-      console.log(res);
-      res.forEach((element: any) => {
-        console.log("ITBAC getHousing : " + element.Country);
-      });
-      setRows(res);
-    } else {
-      toast.error("Response Error..");
-    }
+    worker.onerror = (error) => {
+      console.error("Error in worker:", error);
+      worker.terminate(); // Terminate the worker in case of an error
+    };
+    const apiUrlEndPoint = "/api/admin/APICallHousing";
+    const httpMethod = "GET"; // Specify the HTTP method (e.g., 'POST', 'PUT', etc.)
+    const requestBody = {
+      // Your request body data here
+      // For example:
+      // key1: "value1",
+      // key2: "value2",
+    };
+
+    const customHeaders = {
+      // Add custom headers as needed
+      //   Authorization: "Bearer YOUR_ACCESS_TOKEN",
+      "Content-Type": "application/json",
+    };
+
+    const data = {
+      url: apiUrlEndPoint,
+      method: httpMethod,
+      requestBody: requestBody,
+      headers: customHeaders,
+    };
+
+    worker.postMessage(JSON.stringify(data));
+    console.log("end initial Worker");
   };
+
+  // const getHousing = async () => {
+  //   const apiUrlEndPoint = "/api/admin/APICallHousing";
+  //   const response = await fetch(apiUrlEndPoint, {
+  //     method: "GET",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //   });
+
+  //   if (response.ok) {
+  //     const res = await response.json();
+  //     console.log(res);
+  //     res.forEach((element: any) => {
+  //       console.log("ITBAC getHousing : " + element.Country);
+  //     });
+  //     setRows(res);
+  //   } else {
+  //     toast.error("Response Error..");
+  //   }
+  // };
 
   const onChangeValue = (txtValue: string, setter: Function) => {
     if (txtValue.length === 0) {
@@ -128,7 +170,7 @@ const DevelopmentHousing = () => {
     });
 
     if (response.ok) {
-      getHousing();
+      fetchData();
     } else {
       toast.error("Response Error..");
     }

@@ -13,7 +13,7 @@ export default async function addCountry(req,res){
         console.log(insertQuery);
         const insertQueryResult = await (await db).query(insertQuery);
         console.log(insertQueryResult);
-       // return result[0];
+        return insertQueryResult[0];
   } catch ( error ) {
       console.log( "DB ERROR "+error );
   }
