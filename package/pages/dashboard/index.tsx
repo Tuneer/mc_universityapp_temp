@@ -28,7 +28,7 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import dynamic from "next/dynamic";
 
-const pages = ["Aviral", "Scott", "About"];
+const pages = ["Aviral", "Scott", "About","Home"];
 const settings = ["Profile", "Logout"];
 
 //dynamic component
@@ -37,6 +37,10 @@ const DynamicHeader = dynamic(
 );
 const DynamicHeader2 = dynamic(
   () => import("../../src/components/dashboard/YearlyBreakup")
+);
+
+const Home = dynamic(
+  () => import("../../src/components/user/home")
 );
 
 const Dashboard = () => {
@@ -66,6 +70,8 @@ const Dashboard = () => {
       setDynComp(<div>{loadDynamicComponent()}</div>);
     } else if (event.currentTarget.title === pages[1]) {
       setDynComp(<div>{loadDynamicComponent2()}</div>);
+    }else if (event.currentTarget.title === pages[3]) {
+      setDynComp(<div>{loadHome()}</div>);
     }
     setAnchorElNav(null);
   };
@@ -163,6 +169,14 @@ const Dashboard = () => {
     return (
       <Suspense fallback={<div>Loading...</div>}>
         <DynamicHeader2 />
+      </Suspense>
+    );
+  };
+
+  const loadHome = () => {
+    return (
+      <Suspense fallback={<div>Loading...</div>}>
+        <Home />
       </Suspense>
     );
   };

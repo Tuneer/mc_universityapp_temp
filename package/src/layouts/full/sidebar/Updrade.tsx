@@ -1,5 +1,6 @@
 import { Box, Typography, Button } from '@mui/material';
-import img1 from 'public/images/backgrounds/rocket.png';
+//import img1 from 'public/images/backgrounds/rocket.png';
+import imgRocket from '../../../../public/images/backgrounds/rocket.png'
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -19,7 +20,7 @@ export const Upgrade = () => {
                     </Button>
                 </Box>
                 <Box mt="-35px">
-                    <Image alt="Remy Sharp" src={img1} width={100} />
+                    <Image alt="Remy Sharp" src={imgRocket} width={100} />
                 </Box>
             </>
         </Box>

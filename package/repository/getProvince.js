@@ -13,6 +13,7 @@ export default async function getProvince(req,res){
        // console.log("VALUES: "+JSON.stringify(values))
         const result = await (await db).query(selectQuery);
         //console.log(result[0]);
+        await (await db).end()
         return result[0];
   } catch ( error ) {
       console.log( "DB ERROR "+error );

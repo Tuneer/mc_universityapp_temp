@@ -16,7 +16,6 @@ import BlankLayout from '../src/layouts/blank/BlankLayout';
 export default function Home() {
   return (
   index()
-
     /*
       <PageContainer title="Dashboard" description="this is Dashboard">
       <Box>
