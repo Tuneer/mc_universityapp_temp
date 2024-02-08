@@ -4,12 +4,12 @@ const baselightTheme = createTheme({
   direction: "ltr",
   palette: {
     primary: {
-      main: "#5D87FF",
-      light: "#ECF2FF",
+      main: "#683733",
+      light: "#5e6043",
       dark: "#4570EA",
     },
     secondary: {
-      main: "#49BEFF",
+      main: "#c2ac7f",
       light: "#E8F7FF",
       dark: "#23afdb",
     },
@@ -26,7 +26,7 @@ const baselightTheme = createTheme({
       contrastText: "#ffffff",
     },
     error: {
-      main: "#FA896B",
+      main: "#ff0000",
       light: "#FDEDE8",
       dark: "#f3704d",
       contrastText: "#ffffff",

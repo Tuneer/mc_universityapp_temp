@@ -201,7 +201,7 @@ const Dashboard = () => {
               sx={{
                 mr: 2,
                 display: { xs: "none", md: "flex" },
-                fontFamily: "monospace",
+                fontFamily: "adamina",
                 fontWeight: 700,
                 letterSpacing: ".3rem",
                 color: "inherit",
@@ -246,7 +246,7 @@ const Dashboard = () => {
                     title={page}
                     onClick={handleCloseNavMenu}
                   >
-                    <Typography textAlign="center">{page}</Typography>
+                    <Typography fontFamily="adamina" textAlign="center">{page}</Typography>
                   </MenuItem>
                 ))}
               </Menu>
@@ -262,7 +262,7 @@ const Dashboard = () => {
                 mr: 2,
                 display: { xs: "flex", md: "none" },
                 flexGrow: 1,
-                fontFamily: "monospace",
+                fontFamily: "adamina",
                 fontWeight: 700,
                 letterSpacing: ".3rem",
                 color: "inherit",
@@ -279,7 +279,7 @@ const Dashboard = () => {
                   onClick={handleCloseNavMenu}
                   sx={{ my: 2, color: "white", display: "block" }}
                 >
-                  {page}
+                  {<Typography fontFamily="adamina" >{page}</Typography>}
                 </Button>
               ))}
             </Box>
@@ -314,7 +314,7 @@ const Dashboard = () => {
               >
                 {settings.map((setting) => (
                   <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{setting}</Typography>
+                    <Typography fontFamily="adamina" textAlign="center">{setting}</Typography>
                   </MenuItem>
                 ))}
               </Menu>
