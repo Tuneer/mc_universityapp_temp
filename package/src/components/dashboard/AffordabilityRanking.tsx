@@ -1,6 +1,6 @@
 import React from 'react';
 import img4 from "../../../public/images/products/s11.jpg";
-import img2 from '../../../public/images/products/rank.png'
+import img2 from '../../../public/images/backgrounds/1.svg'
 import Image from "next/image";
 import { Box, Typography } from '@mui/material';
 
@@ -12,8 +12,8 @@ interface AffordabilityRankingProp {
 const AffordabilityRankingImageWithTextMUI: React.FC<AffordabilityRankingProp> = ({ rank, description }) => (
   <div
     style={{
-      position: 'relative',
-      width: '200px',
+      position: 'absolute',
+      width: '290px',
       height: '200px',
     }}
   >
@@ -26,13 +26,14 @@ const AffordabilityRankingImageWithTextMUI: React.FC<AffordabilityRankingProp> =
     <div
       style={{
         position: 'absolute',
-        top: '40%',
+        top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
         color: 'black',
-        fontSize: '25px',
+        fontSize: '20px',
         fontWeight: 'bold',
-        fontFamily:'adamina',
+        fontFamily:'Montserrat',
+        fontStyle:'normal',
       }}
     >
       {rank}th
@@ -40,14 +41,15 @@ const AffordabilityRankingImageWithTextMUI: React.FC<AffordabilityRankingProp> =
 
     <div
       style={{
-        position: 'relative',
-        top: '100%',
+        position: 'absolute',
+        top: '90%',
         left: '50%',
         transform: 'translate(-40%, -20%)',
         color: 'black',
-        fontSize: '18px',
-        fontWeight: 'bold',
-        fontFamily:'adamina',
+        fontSize: '15px',
+        fontWeight: '400',
+        fontFamily:'Montserrat',
+        fontStyle: 'normal',
       }}
     >
       {description}

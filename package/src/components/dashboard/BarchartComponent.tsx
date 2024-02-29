@@ -16,9 +16,11 @@ interface Props {
       borderWidth: number;
     }[];
   };
+  heading: string
 }
 
-const BarChart: React.FC<Props> = ({ data }) => {
+const BarChart: React.FC<Props> = ({ data,heading }) => {
+
   const chartOptions = {
     maintainAspectRatio: false,
     responsive: true,
@@ -35,7 +37,7 @@ const BarChart: React.FC<Props> = ({ data }) => {
       },
       title: {
         display: true,
-        text: 'Bar Chart Example',
+        text: heading,
         font: {
           size: 16,
         },

@@ -1,12 +1,21 @@
-import { Adamina } from '@next/font/google';
+import { Tinos,Montserrat } from '@next/font/google';
 import { createTheme } from '@mui/material/styles';
 import { red } from '@mui/material/colors';
 
-export const adamina = Adamina({
+export const TinosFont = Tinos({
+  style: 'normal',
   weight: ['400'],
-  subsets: ['latin'],
+  subsets: ['greek'],
   display: 'swap',
-  fallback: ['Helvetica', 'Arial', 'sans-serif'],
+  fallback: [''],
+});
+
+export const MontserratFont = Montserrat({
+  style: 'normal',
+  weight: ['400'],
+  subsets: ['vietnamese'],
+  display: 'swap',
+  fallback: [''],
 });
 
 // Create a theme instance.
@@ -23,7 +32,7 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: adamina.style.fontFamily,
+    // fontFamily: TinosFont.style.fontFamily,
   },
 });
 

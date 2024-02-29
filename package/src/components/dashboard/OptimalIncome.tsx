@@ -19,7 +19,7 @@ const OptimalIncomeChart: React.FC<Props> = ({ optimalIncome, populationBelowOpt
         backgroundColor: ['#f44336', '#000000'],
         hoverBackgroundColor: ['#ff7043', '#000000'],
         borderColor: ['#fff', '#fff'],
-        fontFamily:'adamina',
+        fontFamily:'Tinos',
       },
     ],
   };
@@ -46,7 +46,7 @@ const OptimalIncomeChart: React.FC<Props> = ({ optimalIncome, populationBelowOpt
         font: {
           size: 16,
         },
-        fontFamily:'adamina',
+        fontFamily:'Tinos',
       },
     },
   };
