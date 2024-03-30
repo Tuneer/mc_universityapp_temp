@@ -28,7 +28,7 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import dynamic from "next/dynamic";
 
-const pages = ["Aviral", "Scott", "About","Home"];
+const pages = ["Aviral", "About","Home"];
 const settings = ["Profile", "Logout"];
 
 //dynamic component
@@ -70,7 +70,7 @@ const Dashboard = () => {
       setDynComp(<div>{loadDynamicComponent()}</div>);
     } else if (event.currentTarget.title === pages[1]) {
       setDynComp(<div>{loadDynamicComponent2()}</div>);
-    }else if (event.currentTarget.title === pages[3]) {
+    }else if (event.currentTarget.title === pages[2]) {
       setDynComp(<div>{loadHome()}</div>);
     }
     setAnchorElNav(null);
